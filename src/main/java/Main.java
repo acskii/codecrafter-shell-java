@@ -15,6 +15,7 @@ public class Main {
             switch (command) {
                 case "exit" -> System.exit(0);
                 case "echo" -> System.out.println(input.substring(4).trim());
+                case "type" -> printType(input.split(" ")[1]);
                 default -> System.out.printf("%s: command not found\n", command);
             }
         } while (true);
@@ -22,5 +23,17 @@ public class Main {
 
     private static String getCommand(String input) {
         return input.split(" ")[0];
+    }
+
+    private static void printType(String command) {
+        switch (command) {
+            case "echo":
+            case "exit":
+            case "type":
+                System.out.printf("%s is a shell builtin\n", command);
+                break;
+            default:
+                System.out.printf("%s: not found\n", command);
+        }
     }
 }
