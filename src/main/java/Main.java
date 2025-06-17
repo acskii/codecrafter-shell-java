@@ -8,7 +8,11 @@ public class Main {
         do {
             System.out.print("$ ");
             input = scanner.nextLine();
-            System.out.printf("%s: command not found\n", input);
+            if (input.equals("exit 0")) {
+                System.exit(0);
+            } else {
+                System.out.printf("%s: command not found\n", input);
+            }
         } while (true);
     }
 }
