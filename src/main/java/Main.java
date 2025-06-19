@@ -1,8 +1,8 @@
-import java.util.Arrays;
 import java.util.Scanner;
+import java.io.File;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String input;
         String command;
@@ -28,12 +28,29 @@ public class Main {
     private static void printType(String command) {
         switch (command) {
             case "echo":
-            case "exit":
             case "type":
+            case "exit":
                 System.out.printf("%s is a shell builtin\n", command);
                 break;
             default:
-                System.out.printf("%s: not found\n", command);
+                printExecutableType(command);
         }
+    }
+
+    private static void printExecutableType(String command) {
+        String path = System.getenv("PATH");
+        String[] dirs = path.split(File.pathSeparator);
+        boolean exists = false;
+
+        for (String dir : dirs) {
+            File cmd = new File(dir, command);
+            if (cmd.exists()) {
+                exists = true;
+                System.out.printf("%s is %s\n", command, cmd.getAbsolutePath());
+                break;
+            }
+        }
+
+        if (!exists) System.out.printf("%s: not found\n", command);
     }
 }
