@@ -25,7 +25,7 @@ public class Main {
                 String executable = Executable.findExecutable(command);
 
                 if (executable != null) {
-                    invoker.setCommand(new ExecutableCommand(executable, arguments));
+                    invoker.setCommand(new ExecutableCommand(command, arguments));
                     invoker.invoke();
                 } else {
                     System.out.printf("%s: command not found\n", command);

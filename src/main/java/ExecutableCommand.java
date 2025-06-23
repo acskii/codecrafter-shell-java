@@ -1,7 +1,7 @@
 import java.io.IOException;
 
 public class ExecutableCommand extends BaseCommand {
-    private String _executable;
+    private final String _executable;
     private String[] _parameters;
 
     public ExecutableCommand(String executable, String[] args) {
