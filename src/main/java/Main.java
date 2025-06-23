@@ -22,7 +22,14 @@ public class Main {
                 invoker.setCommand(cmd);
                 invoker.invoke();
             } catch (IllegalArgumentException e) {
-                System.out.printf("%s: command not found\n", command);
+                String executable = Executable.findExecutable(command);
+
+                if (executable != null) {
+                    invoker.setCommand(new ExecutableCommand(executable, arguments));
+                    invoker.invoke();
+                } else {
+                    System.out.printf("%s: command not found\n", command);
+                }
             }
         }
 
