@@ -15,6 +15,7 @@ public class UserInputParser {
         List<String> result = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
         boolean isInsideSingleQuote = false;
+        boolean isInsideDoubleQuote = false;
         int i = 0;
 
         while (i < input.length() && !Character.isWhitespace(input.charAt(i))) i++;
@@ -23,9 +24,11 @@ public class UserInputParser {
         for (int j = i; j < input.length(); j++) {
             char c = input.charAt(j);
 
-            if (c == '\'') {
+            if (c == '"') {
+                isInsideDoubleQuote = !isInsideDoubleQuote;
+            } else if (c == '\'' && !isInsideDoubleQuote) {
                 isInsideSingleQuote = !isInsideSingleQuote;
-            } else if (isInsideSingleQuote | c != ' ') {
+            } else if (isInsideDoubleQuote | isInsideSingleQuote | c != ' ') {
                 builder.append(c);
             } else if (!builder.isEmpty()) {
                 result.add(builder.toString());
