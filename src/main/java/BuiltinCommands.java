@@ -6,7 +6,8 @@ public enum BuiltinCommands {
     /* ADD BUILTIN COMMANDS BELOW HERE */
     ECHO("echo", EchoCommand::new),
     EXIT("exit", ExitCommand::new),
-    TYPE("type", TypeCommand::new);
+    TYPE("type", TypeCommand::new),
+    PWD("pwd", PrintWorkingDirectoryCommand::new);
     /* ADD BUILTIN COMMANDS ABOVE HERE */
 
     private final String name;
