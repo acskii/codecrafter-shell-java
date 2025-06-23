@@ -18,7 +18,7 @@ public class ChangeDirectoryCommand extends BaseCommand {
     @Override
     public void execute() {
         if (_newPath.startsWith("~")) {
-            ShellSession.setWD(new File(System.getProperty("user.home")));
+            ShellSession.setWD(ShellSession.getHome());
             return;
         }
 
