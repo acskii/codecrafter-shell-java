@@ -16,6 +16,7 @@ public class UserInputParser {
         StringBuilder builder = new StringBuilder();
         boolean isInsideSingleQuote = false;
         boolean isInsideDoubleQuote = false;
+        boolean passedBackslash = false;
         int i = 0;
 
         while (i < input.length() && !Character.isWhitespace(input.charAt(i))) i++;
@@ -24,7 +25,12 @@ public class UserInputParser {
         for (int j = i; j < input.length(); j++) {
             char c = input.charAt(j);
 
-            if (c == '"') {
+            if (c == '\\' && !isInsideSingleQuote && !isInsideDoubleQuote) {
+                passedBackslash = true;
+            } else if (passedBackslash) {
+                passedBackslash = false;
+                builder.append(c);
+            } else if (c == '"') {
                 isInsideDoubleQuote = !isInsideDoubleQuote;
             } else if (c == '\'' && !isInsideDoubleQuote) {
                 isInsideSingleQuote = !isInsideSingleQuote;
