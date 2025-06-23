@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class UserInputParser {
     private static String[] tokeniseInput(String input) {
@@ -10,6 +12,29 @@ public class UserInputParser {
     }
 
     public static String[] getArgs(String input) {
-        return Arrays.stream(tokeniseInput(input)).skip(1).toArray(String[]::new);
+        List<String> result = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+        boolean isInsideSingleQuote = false;
+        int i = 0;
+
+        while (i < input.length() && !Character.isWhitespace(input.charAt(i))) i++;
+        while (i < input.length() && Character.isWhitespace(input.charAt(i))) i++;
+
+        for (int j = i; j < input.length(); j++) {
+            char c = input.charAt(j);
+
+            if (c == '\'') {
+                isInsideSingleQuote = !isInsideSingleQuote;
+            } else if (isInsideSingleQuote | c != ' ') {
+                builder.append(c);
+            } else if (!builder.isEmpty()) {
+                result.add(builder.toString());
+                builder.delete(0, builder.length());
+            }
+        }
+
+        if (!builder.isEmpty()) result.add(builder.toString());
+
+        return result.toArray(String[]::new);
     }
 }
