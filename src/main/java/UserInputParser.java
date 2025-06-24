@@ -22,6 +22,7 @@ public class UserInputParser {
         while (i < input.length() && !Character.isWhitespace(input.charAt(i))) i++;
         while (i < input.length() && Character.isWhitespace(input.charAt(i))) i++;
 
+        // TODO: Backslash inside single quote + outside quotes
         for (int j = i; j < input.length(); j++) {
             char c = input.charAt(j);
 
@@ -30,7 +31,7 @@ public class UserInputParser {
             } else if (passedBackslash) {
                 passedBackslash = false;
                 builder.append(c);
-            } else if (c == '"') {
+            } else if (c == '"' && !isInsideSingleQuote) {
                 isInsideDoubleQuote = !isInsideDoubleQuote;
             } else if (c == '\'' && !isInsideDoubleQuote) {
                 isInsideSingleQuote = !isInsideSingleQuote;
