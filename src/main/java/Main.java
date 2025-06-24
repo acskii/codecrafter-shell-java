@@ -20,7 +20,7 @@ public class Main {
             String stream = UserInputParser.getOutputStream(input);
 
             redirector.redirectTo((stream == null) ? null : new File(stream));
-            redirector.setStream();
+            redirector.setSystemStream();
 
             try {
                 Command cmd = CommandRegistry.create(command, arguments);
@@ -30,7 +30,7 @@ public class Main {
                 String executable = Executable.findExecutable(command);
 
                 if (executable != null) {
-                    invoker.setCommand(new ExecutableCommand(command, arguments));
+                    invoker.setCommand(new ExecutableCommand(command, arguments, redirector.getCurrentOutput()));
                     invoker.invoke();
                 } else {
                     System.out.printf("%s: command not found\n", command);
@@ -38,23 +38,7 @@ public class Main {
             }
 
             redirector.redirectTo(null);
-            redirector.setStream();
+            redirector.setSystemStream();
         }
-
-//        do {
-//            System.out.print("$ ");
-//            input = reader.nextLine();
-//            command = getCommand(input);
-//
-//            switch (command) {
-//                case "exit" -> System.exit(0);
-//                case "echo" -> System.out.println(input.substring(4).trim());
-//                case "type" -> printType(input.split(" ")[1]);
-//                default:
-//                    if (!runIfExecutable(command, getArguments(input))) {
-//                        System.out.printf("%s: command not found\n", command);
-//                    }
-//            }
-//        } while (true);
     }
 }

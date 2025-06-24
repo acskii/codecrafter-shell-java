@@ -1,12 +1,15 @@
+import java.io.File;
 import java.io.IOException;
 
 public class ExecutableCommand extends BaseCommand {
     private final String _executable;
     private String[] _parameters;
+    private File _output;
 
-    public ExecutableCommand(String executable, String[] args) {
+    public ExecutableCommand(String executable, String[] args, File outputStream) {
         super(args);
         _executable = executable;
+        _output = outputStream;
         setArgs(args);
     }
 
@@ -25,7 +28,7 @@ public class ExecutableCommand extends BaseCommand {
         process.inheritIO();
 
         try {
-            Process p = process.start();
+            Process p = (_output == null) ? process.start() : process.redirectOutput(_output).start();
             p.waitFor();
         } catch (IOException | InterruptedException e) {
             System.err.println("Error executing " + _executable + ": " + e.getMessage());

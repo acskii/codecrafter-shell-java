@@ -6,26 +6,37 @@ import java.io.PrintStream;
 public class OutputRedirector {
     public final PrintStream stdout = System.out;
     private PrintStream _current;
+    private File _currentFile;
 
     public OutputRedirector() {
         _current = stdout;
-        setStream();
+        setSystemStream();
     }
 
-    public void setStream() {
+    public File getCurrentOutput() {
+        return _currentFile;
+    }
+
+    public void setSystemStream() {
         System.setOut(_current);
     }
 
     public void redirectTo(File file) {
         if (file == null) {
             _current = stdout;
+            _currentFile = null;
             return;
         }
 
         PrintStream stream = getPrintStreamFromFile(file);
 
-        if (stream != null) _current = stream;
-        else _current = stdout;
+        if (stream != null) {
+            _current = stream;
+            _currentFile = file;
+        } else {
+            _current = stdout;
+            _currentFile = null;
+        }
     }
 
     private PrintStream getPrintStreamFromFile(File file) {
