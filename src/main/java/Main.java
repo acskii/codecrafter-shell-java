@@ -8,6 +8,7 @@ public class Main {
     public static void main(String[] args) {
         String input;
         CommandInvoker invoker = new CommandInvoker();
+        OutputRedirector redirector = new OutputRedirector();
 
         BuiltinCommands.registerAll();  // register all builtin commands
 
@@ -16,6 +17,10 @@ public class Main {
             input = reader.nextLine();
             String command = UserInputParser.getCommand(input);
             String[] arguments = UserInputParser.getArgs(input);
+            String stream = UserInputParser.getOutputStream(input);
+
+            redirector.redirectTo((stream == null) ? null : new File(stream));
+            redirector.setStream();
 
             try {
                 Command cmd = CommandRegistry.create(command, arguments);
@@ -31,6 +36,9 @@ public class Main {
                     System.out.printf("%s: command not found\n", command);
                 }
             }
+
+            redirector.redirectTo(null);
+            redirector.setStream();
         }
 
 //        do {

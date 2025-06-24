@@ -1,15 +1,49 @@
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class UserInputParser {
     public static String getCommand(String input) {
-        return tokeniseInput(input)[0];
+        return tokeniseInput(getPromptToken(input))[0];
     }
 
     public static String[] getArgs(String input) {
-        String[] tokens = tokeniseInput(input);
+        String[] tokens = tokeniseInput(getPromptToken(input));
         return Arrays.copyOfRange(tokens, 1, tokens.length);
+    }
+
+    private static boolean hasRedirector(String input) {
+        return input.contains(" 1> ") || input.contains(" > ");
+    }
+
+    private static String getPromptToken(String input) {
+        if (hasRedirector(input)) {
+            String[] parts = input.split("( 1> )|( > )");
+            return parts[0];
+        } else {
+            return input;
+        }
+    }
+
+    private static String getStreamToken(String input) {
+        if (hasRedirector(input)) {
+            String[] parts = input.split("( 1> )|( > )");
+            return parts[1];
+        } else {
+            return null;
+        }
+    }
+
+    public static String getOutputStream(String input) {
+        String streamToken = getStreamToken(input);
+        if (streamToken != null) {
+            Path path = Paths.get(streamToken);
+            return path.normalize().toString();
+        } else {
+            return null;
+        }
     }
 
     public static String[] tokeniseInput(String input) {
