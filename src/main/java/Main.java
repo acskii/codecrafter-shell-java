@@ -11,14 +11,14 @@ public class Main {
 
         BuiltinCommands.registerAll();  // register all builtin commands
 
-        // TODO: stream change should be handled by ShellSession
-
         while (true) {
             System.out.print("$ ");
             input = reader.nextLine();
             String command = UserInputParser.getCommand(input);
             String[] arguments = UserInputParser.getArgs(input);
             String stream = UserInputParser.getOutputStream(input);
+
+            Logger.setAppend(UserInputParser.isAppendRedirector(input));
 
             if (UserInputParser.hasOutputRedirector(input)) {
                 Logger.set(stream, null);

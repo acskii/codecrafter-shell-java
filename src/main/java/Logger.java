@@ -9,6 +9,7 @@ public class Logger {
     private static File _outputFile;
     private static File _errFile;
     private static PrintStream _err = stdout;
+    private static boolean _append = false;
 
     public static void set(String outPath, String errPath) {
         try {
@@ -17,14 +18,14 @@ public class Logger {
                 _outputFile = null;
             } else {
                 _outputFile = getFileFromPath(outPath);
-                _output = new PrintStream(new FileOutputStream(_outputFile, true));
+                _output = new PrintStream(new FileOutputStream(_outputFile, _append));
             }
             if (errPath == null) {
                 _err = stdout;
                 _errFile = null;
             } else {
                 _errFile = getFileFromPath(errPath);
-                _err = new PrintStream(new FileOutputStream(_errFile, true));
+                _err = new PrintStream(new FileOutputStream(_errFile, _append));
             }
         } catch (FileNotFoundException e) {
             _output = stdout;
@@ -39,6 +40,14 @@ public class Logger {
 
     public static File getErr() {
         return _errFile;
+    }
+
+    public static boolean isAppend() {
+        return _append;
+    }
+
+    public static void setAppend(boolean append) {
+        _append = append;
     }
 
     private static File getFileFromPath(String path) {

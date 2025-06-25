@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.function.LongFunction;
 
 public class ExecutableCommand extends BaseCommand {
     private final String _executable;
@@ -25,9 +26,20 @@ public class ExecutableCommand extends BaseCommand {
         ProcessBuilder process = new ProcessBuilder(commandLine);
         process.inheritIO();
 
+        File out = Logger.getOutput();
+        File err = Logger.getErr();
+        boolean append = Logger.isAppend();
+
         try {
-            if (Logger.getOutput() != null) { process.redirectOutput(Logger.getOutput()); }
-            if (Logger.getErr() != null) { process.redirectError(Logger.getErr()); }
+            if (out != null) {
+                if (append) process.redirectOutput(ProcessBuilder.Redirect.appendTo(out));
+                else process.redirectOutput(out);
+            }
+            if (err != null) {
+                if (append) process.redirectError(ProcessBuilder.Redirect.appendTo(err));
+                else process.redirectError(err);
+            }
+
             Process p = process.start();
             p.waitFor();
         } catch (IOException | InterruptedException e) {
