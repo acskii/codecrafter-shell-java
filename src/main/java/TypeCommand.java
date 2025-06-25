@@ -13,14 +13,14 @@ public class TypeCommand extends BaseCommand {
     @Override
     public void execute() {
         if (isBuiltin(_cmdToCheck)) {
-            System.out.printf("%s is a shell builtin\n", _cmdToCheck);
+            Logger.output(String.format("%s is a shell builtin", _cmdToCheck));
         } else {
             // check if it is an executable
             String path = Executable.findExecutable(_cmdToCheck);
             if (path != null) {
-                System.out.printf("%s is %s\n", _cmdToCheck, path);
+                Logger.output(String.format("%s is %s", _cmdToCheck, path));
             } else {
-                System.out.printf("%s: not found\n", _cmdToCheck);
+                Logger.err(String.format("%s: not found", _cmdToCheck));
             }
         }
     }

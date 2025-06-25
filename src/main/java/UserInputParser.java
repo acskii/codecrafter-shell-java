@@ -14,13 +14,16 @@ public class UserInputParser {
         return Arrays.copyOfRange(tokens, 1, tokens.length);
     }
 
-    private static boolean hasRedirector(String input) {
+    public static boolean hasOutputRedirector(String input) {
         return input.contains(" 1> ") || input.contains(" > ");
+    }
+    public static boolean hasErrRedirector(String input) {
+        return input.contains(" 2> ");
     }
 
     private static String getPromptToken(String input) {
-        if (hasRedirector(input)) {
-            String[] parts = input.split("( 1> )|( > )");
+        if (hasOutputRedirector(input) || hasErrRedirector(input)) {
+            String[] parts = input.split("( [1-2]> )|( > )");
             return parts[0];
         } else {
             return input;
@@ -28,8 +31,8 @@ public class UserInputParser {
     }
 
     private static String getStreamToken(String input) {
-        if (hasRedirector(input)) {
-            String[] parts = input.split("( 1> )|( > )");
+        if (hasOutputRedirector(input) || hasErrRedirector(input)) {
+            String[] parts = input.split("( [1-2]> )|( > )");
             return parts[1];
         } else {
             return null;

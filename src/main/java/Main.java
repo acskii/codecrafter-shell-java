@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Scanner;
 import java.io.File;
 
@@ -8,9 +7,11 @@ public class Main {
     public static void main(String[] args) {
         String input;
         CommandInvoker invoker = new CommandInvoker();
-        OutputRedirector redirector = new OutputRedirector();
+//        OutputRedirector redirector = new OutputRedirector();
 
         BuiltinCommands.registerAll();  // register all builtin commands
+
+        // TODO: stream change should be handled by ShellSession
 
         while (true) {
             System.out.print("$ ");
@@ -19,8 +20,11 @@ public class Main {
             String[] arguments = UserInputParser.getArgs(input);
             String stream = UserInputParser.getOutputStream(input);
 
-            redirector.redirectTo((stream == null) ? null : new File(stream));
-            redirector.setSystemStream();
+            if (UserInputParser.hasOutputRedirector(input)) {
+                Logger.set(stream, null);
+            } else if (UserInputParser.hasErrRedirector(input)) {
+                Logger.set(null, stream);
+            }
 
             try {
                 Command cmd = CommandRegistry.create(command, arguments);
@@ -30,15 +34,14 @@ public class Main {
                 String executable = Executable.findExecutable(command);
 
                 if (executable != null) {
-                    invoker.setCommand(new ExecutableCommand(command, arguments, redirector.getCurrentOutput()));
+                    invoker.setCommand(new ExecutableCommand(command, arguments));
                     invoker.invoke();
                 } else {
-                    System.out.printf("%s: command not found\n", command);
+                    Logger.err(String.format("%s: command not found", command));
                 }
             }
 
-            redirector.redirectTo(null);
-            redirector.setSystemStream();
+            Logger.set(null, null);
         }
     }
 }

@@ -8,6 +8,6 @@ public class PrintWorkingDirectoryCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        System.out.println(ShellSession.getWD());
+        Logger.output(ShellSession.getWD().toString());
     }
 }

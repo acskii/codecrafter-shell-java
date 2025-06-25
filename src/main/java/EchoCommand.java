@@ -12,9 +12,6 @@ public class EchoCommand extends BaseCommand{
 
     @Override
     public void execute() {
-        for (String arg : _argsToPrint) {
-            System.out.printf("%s ", arg);
-        }
-        System.out.print("\n");
+        Logger.output(String.join(" ", _argsToPrint));
     }
 }

@@ -10,7 +10,7 @@ public class ExitCommand extends BaseCommand {
         try {
             _statusCode = Integer.parseInt(args[0]);    // first arg is the status code (for now)
         } catch (NumberFormatException e) {
-            System.out.println("ERROR");   // error handler
+            Logger.err("ERROR");   // error handler
         }
     }
 

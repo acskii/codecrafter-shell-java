@@ -31,7 +31,7 @@ public class ChangeDirectoryCommand extends BaseCommand {
         if (newDirectory.isDirectory()) {
             ShellSession.setWD(newDirectory);
         } else {
-            System.out.printf("cd: %s: No such file or directory\n", _newPath);
+            Logger.err(String.format("cd: %s: No such file or directory", _newPath));
         }
     }
 }
