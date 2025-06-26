@@ -1,19 +1,17 @@
 import java.util.Scanner;
-import java.io.File;
 
 public class Main {
-    static Scanner reader = new Scanner(System.in);
+    private static final Scanner reader = new Scanner(System.in);
 
     public static void main(String[] args) {
-        String input;
+
         CommandInvoker invoker = new CommandInvoker();
-//        OutputRedirector redirector = new OutputRedirector();
 
         BuiltinCommands.registerAll();  // register all builtin commands
 
         while (true) {
             System.out.print("$ ");
-            input = reader.nextLine();
+            String input = reader.nextLine();
             String command = UserInputParser.getCommand(input);
             String[] arguments = UserInputParser.getArgs(input);
             String stream = UserInputParser.getOutputStream(input);
@@ -41,6 +39,7 @@ public class Main {
                 }
             }
 
+            CommandHistory.addCommand(command);
             Logger.set(null, null);
         }
     }

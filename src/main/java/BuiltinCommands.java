@@ -8,6 +8,7 @@ public enum BuiltinCommands {
     EXIT("exit", ExitCommand::new),
     TYPE("type", TypeCommand::new),
     CD("cd", ChangeDirectoryCommand::new),
+    HISTORY("history", HistoryCommand::new),
     PWD("pwd", PrintWorkingDirectoryCommand::new);
     /* ADD BUILTIN COMMANDS ABOVE HERE */
 
