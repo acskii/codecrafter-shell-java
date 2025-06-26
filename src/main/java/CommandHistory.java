@@ -13,4 +13,8 @@ public class CommandHistory {
     public static String[] getPreviousCommands() {
         return history.toArray(String[]::new);
     }
+
+    public static String[] getPreviousCommands(int n) {
+        return history.subList(history.size() - n, history.size()).toArray(String[]::new);
+    }
 }
