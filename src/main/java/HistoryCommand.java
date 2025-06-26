@@ -12,6 +12,5 @@ public class HistoryCommand extends BaseCommand {
         for (String cmd : CommandHistory.getPreviousCommands()) {
             Logger.output(String.format("\t%d %s", count++, cmd));
         }
-        Logger.output("\n");
     }
 }

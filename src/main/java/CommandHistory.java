@@ -3,24 +3,14 @@ import java.util.List;
 import java.util.Stack;
 
 public class CommandHistory {
-    private static final Stack<String> history = new Stack<>();
+    private static final List<String> history = new ArrayList<>();
 
 
     public static void addCommand(String command) {
-        history.push(command);
+        history.add(command);
     }
 
     public static String[] getPreviousCommands() {
-        List<String> cmds = new ArrayList<>();
-        Stack<String> temp = new Stack<>();
-
-        while (!history.isEmpty()) {
-            String cmd = history.pop();
-            cmds.add(cmd);
-            temp.push(cmd);
-        }
-
-        while (!temp.isEmpty()) { history.push(temp.pop()); }
-        return cmds.toArray(String[]::new);
+        return history.toArray(String[]::new);
     }
 }

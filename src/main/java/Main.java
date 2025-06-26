@@ -16,6 +16,7 @@ public class Main {
             String[] arguments = UserInputParser.getArgs(input);
             String stream = UserInputParser.getOutputStream(input);
 
+            CommandHistory.addCommand(input);
             Logger.setAppend(UserInputParser.isAppendRedirector(input));
 
             if (UserInputParser.hasOutputRedirector(input)) {
@@ -39,7 +40,6 @@ public class Main {
                 }
             }
 
-            CommandHistory.addCommand(command);
             Logger.set(null, null);
         }
     }
