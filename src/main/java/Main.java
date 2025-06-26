@@ -130,7 +130,7 @@ public class Main {
                             // [
                             if (code == 65) {
                                 // A -> UP KEY
-                                String previous = CommandHistory.getLatestCommand();
+                                String previous = CommandHistory.getUpCommand();
                                 clearLine(2 + buffer.length());
                                 System.out.print("$ ");
                                 System.out.print(previous);
@@ -140,7 +140,13 @@ public class Main {
                                 break;
                             } else if (code == 66) {
                                 // B -> DOWN KEY
+                                String previous = CommandHistory.getDownCommand();
+                                clearLine(2 + buffer.length());
+                                System.out.print("$ ");
+                                System.out.print(previous);
 
+                                buffer.delete(0, buffer.length());
+                                buffer.append(previous);
                                 break;
                             }
                         }
