@@ -9,6 +9,7 @@ public class Main {
     public static void main(String[] args) {
         CommandInvoker invoker = new CommandInvoker();
         BuiltinCommands.registerAll();  // register all builtin commands
+        CommandHistory.loadCommands();
 
         enableRawMode();
 

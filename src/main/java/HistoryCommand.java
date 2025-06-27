@@ -40,7 +40,9 @@ public class HistoryCommand extends BaseCommand {
         } else {
             if (_read) {
                 String[] commands = FileHandler.getLinesFromFile(_historyFilePath);
-                CommandHistory.loadCommandsFromRead(commands);
+                for (String cmd : commands) {
+                    CommandHistory.addCommand(cmd);
+                }
             } else if (_write) {
                 String[] commands = CommandHistory.getAllCommands();
                 FileHandler.writeLinesToFile(_historyFilePath, commands);
