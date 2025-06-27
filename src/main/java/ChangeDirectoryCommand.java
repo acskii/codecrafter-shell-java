@@ -22,11 +22,7 @@ public class ChangeDirectoryCommand extends BaseCommand {
             return;
         }
 
-        String pwd = ShellSession.getWD().getAbsolutePath();
-        Path path = Paths.get(pwd);
-        Path resolvedPath = path.resolve(_newPath);
-
-        File newDirectory = new File(resolvedPath.normalize().toString());
+        File newDirectory = FileHandler.getAbsoluteFile(_newPath);
 
         if (newDirectory.isDirectory()) {
             ShellSession.setWD(newDirectory);
