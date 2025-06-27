@@ -1,6 +1,7 @@
 public class HistoryCommand extends BaseCommand {
     private int _startFrom;
     private String _historyFilePath;
+    private boolean _read;
 
     public HistoryCommand(String[] args) {
         super(args);
@@ -11,8 +12,9 @@ public class HistoryCommand extends BaseCommand {
         try {
             if (args.length == 1) {
                 _startFrom = Integer.parseInt(args[0]);
-            } else if (args.length == 2 && args[0].equals("-r")) {
+            } else if (args.length == 2) {
                 _historyFilePath = args[1];
+                _read = args[0].equals("-r");
             } else {
                 _startFrom = 0;
             }
@@ -31,9 +33,14 @@ public class HistoryCommand extends BaseCommand {
                 Logger.output(String.format("\t%d %s", count++, cmd));
             }
         } else {
-            String[] commands = FileHandler.getLinesFromFile(_historyFilePath);
-            for (String cmd : commands) {
-                CommandHistory.addCommand(cmd);
+            if (_read) {
+                String[] commands = FileHandler.getLinesFromFile(_historyFilePath);
+                for (String cmd : commands) {
+                    CommandHistory.addCommand(cmd);
+                }
+            } else {
+                String[] commands = CommandHistory.getPreviousCommands();
+                FileHandler.writeLinesToFile(_historyFilePath, commands);
             }
         }
     }

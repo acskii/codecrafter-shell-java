@@ -1,7 +1,5 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -36,5 +34,17 @@ public class FileHandler {
 
     public static String[] getLinesFromFile(String filePath) {
         return getLinesFromFile(getAbsoluteFile(filePath));
+    }
+
+    public static void writeLinesToFile(File file, String[] lines) {
+        try {
+            Files.write(file.toPath(), List.of(lines));
+        } catch (IOException e) {
+            Logger.err("Failed to write history from file.");
+        }
+    }
+
+    public static void writeLinesToFile(String filePath, String[] lines) {
+        writeLinesToFile(getAbsoluteFile(filePath), lines);
     }
 }
