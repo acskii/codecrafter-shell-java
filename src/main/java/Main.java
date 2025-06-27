@@ -118,7 +118,7 @@ public class Main {
                     case '\t': {
                         AutoComplete completer = new AutoComplete();
                         String prefix = buffer.toString();
-                        String[] suggestions = completer.getBuiltInCompletions(prefix);
+                        String[] suggestions = completer.getCompletions(prefix);
 
                         if (suggestions.length == 1) {
                             clearLine(2 + buffer.length());

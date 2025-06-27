@@ -52,9 +52,11 @@ public class AutoComplete {
     }
 
     private final Trie builtins = new Trie();
+    private final Trie executablesFromPath = new Trie();
 
     public AutoComplete() {
         addBuiltInCommands();
+        addExecutablesFromPath();
     }
 
     private void addBuiltInCommands() {
@@ -63,7 +65,21 @@ public class AutoComplete {
         }
     }
 
-    public String[] getBuiltInCompletions(String prefix) {
-        return builtins.getWordsFrom(prefix).toArray(String[]::new);
+    private void addExecutablesFromPath() {
+        for (String command : Executable.getExecutablesFromPath()) {
+            builtins.insert(command);
+        }
+    }
+
+    public String[] getCompletions(String prefix) {
+        List<String> builtInSuggestions = builtins.getWordsFrom(prefix);
+
+        if (builtInSuggestions.isEmpty()) {
+            List<String> executableSuggestions = executablesFromPath.getWordsFrom(prefix);
+
+            return executableSuggestions.toArray(String[]::new);
+        } else {
+            return builtInSuggestions.toArray(String[]::new);
+        }
     }
 }
