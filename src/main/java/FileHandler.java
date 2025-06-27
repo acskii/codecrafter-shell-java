@@ -2,6 +2,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,19 @@ public class FileHandler {
         }
     }
 
+    public static void appendLinesToFile(File file, String[] lines) {
+       try {
+            Files.write(file.toPath(), List.of(lines), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            Logger.err("Failed to append history from file.");
+        }
+    }
+
     public static void writeLinesToFile(String filePath, String[] lines) {
         writeLinesToFile(getAbsoluteFile(filePath), lines);
+    }
+
+    public static void appendLinesToFile(String filePath, String[] lines) {
+        appendLinesToFile(getAbsoluteFile(filePath), lines);
     }
 }

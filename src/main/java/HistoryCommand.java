@@ -2,6 +2,8 @@ public class HistoryCommand extends BaseCommand {
     private int _startFrom;
     private String _historyFilePath;
     private boolean _read;
+    private boolean _write;
+    private boolean _append;
 
     public HistoryCommand(String[] args) {
         super(args);
@@ -15,6 +17,9 @@ public class HistoryCommand extends BaseCommand {
             } else if (args.length == 2) {
                 _historyFilePath = args[1];
                 _read = args[0].equals("-r");
+                _write = args[0].equals("-w");
+                _append = args[0].equals("-a");
+
             } else {
                 _startFrom = 0;
             }
@@ -27,7 +32,7 @@ public class HistoryCommand extends BaseCommand {
     public void execute() {
         if (_historyFilePath == null) {
             int count = 1 + _startFrom;
-            String[] cmds = (_startFrom == 0) ? CommandHistory.getPreviousCommands() : CommandHistory.getPreviousCommands(_startFrom);
+            String[] cmds = (_startFrom == 0) ? CommandHistory.getAllCommands() : CommandHistory.getAllCommands(_startFrom);
 
             for (String cmd : cmds) {
                 Logger.output(String.format("\t%d %s", count++, cmd));
@@ -35,12 +40,14 @@ public class HistoryCommand extends BaseCommand {
         } else {
             if (_read) {
                 String[] commands = FileHandler.getLinesFromFile(_historyFilePath);
-                for (String cmd : commands) {
-                    CommandHistory.addCommand(cmd);
-                }
-            } else {
-                String[] commands = CommandHistory.getPreviousCommands();
+                CommandHistory.loadCommandsFromRead(commands);
+            } else if (_write) {
+                String[] commands = CommandHistory.getAllCommands();
                 FileHandler.writeLinesToFile(_historyFilePath, commands);
+            } else if (_append) {
+                String[] commands = CommandHistory.getPreviousCommands();
+                FileHandler.appendLinesToFile(_historyFilePath, commands);
+                CommandHistory.advanceCommandPointer(commands.length);
             }
         }
     }
