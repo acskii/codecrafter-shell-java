@@ -111,6 +111,22 @@ public class Main {
                         return buffer.toString();
                     }
 
+                    case '\t': {
+                        AutoComplete completer = new AutoComplete();
+                        String prefix = buffer.toString();
+                        String[] suggestions = completer.getBuiltInCompletions(prefix);
+
+                        if (suggestions.length == 1) {
+                            clearLine(2 + buffer.length());
+                            System.out.print("$ ");
+                            System.out.print(suggestions[0] + " ");
+
+                            buffer.delete(0, buffer.length());
+                            buffer.append(suggestions[0]).append(" ");
+                            break;
+                        }
+                    }
+
                     case 0x7f: {
                         // Backspace
                         if (buffer.isEmpty()) continue;
