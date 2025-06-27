@@ -89,6 +89,10 @@ public class Main {
         System.out.print('\r');
     }
 
+    private static void bell() {
+        System.out.print((char) 0x7);
+    }
+
     private static String read() {
         try {
             System.out.print("$ ");
@@ -124,6 +128,8 @@ public class Main {
                             buffer.delete(0, buffer.length());
                             buffer.append(suggestions[0]).append(" ");
                             break;
+                        } else {
+                            bell();
                         }
                     }
 
