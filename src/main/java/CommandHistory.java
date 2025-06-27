@@ -30,6 +30,12 @@ public class CommandHistory {
         }
     }
 
+    public static void writeCommands() {
+        if (historyFile != null) {
+            FileHandler.writeLinesToFile(historyFile, getPreviousCommands());
+        }
+    }
+
     public static void advanceCommandPointer(int n) {
         fromReadLastIndex += n;
     }

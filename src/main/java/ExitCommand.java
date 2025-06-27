@@ -16,6 +16,7 @@ public class ExitCommand extends BaseCommand {
 
     @Override
     public void execute() {
+        CommandHistory.writeCommands();
         System.exit(_statusCode);
     }
 }
