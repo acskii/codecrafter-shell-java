@@ -1,10 +1,19 @@
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AutoComplete {
+    public enum Result {
+        NONE, MORE, SINGLE;
+    }
+
+    private static final Comparator<String> SHORTEST_FIRST = Comparator
+            .comparingInt(String::length)
+            .thenComparing(String::compareTo);
+
     private static class Trie {
         public static class TrieNode {
-            Map<Character, TrieNode> children = new TreeMap<>();
+            Map<Character, TrieNode> children = new HashMap<>();
             boolean endOfWord;
         }
 
@@ -68,15 +77,86 @@ public class AutoComplete {
         }
     }
 
-    public String[] getCompletions(String prefix) {
+    public Result autoComplete(StringBuilder buffer, boolean bell) {
+        String prefix = buffer.toString();
+        if (prefix.isBlank()) { return Result.NONE; }
+
+        SequencedSet<String> completions = getCompletions(prefix);
+
+        if (completions.isEmpty()) { return Result.NONE; }
+
+        if (completions.size() == 1) {
+            writeToOutput(buffer, completions.getFirst(), false);
+            return Result.SINGLE;
+        }
+
+        String longestPrefix = getLongestSharedPrefix(completions);
+
+        if (!longestPrefix.isEmpty()) {
+            writeToOutput(buffer, longestPrefix, true);
+            return Result.MORE;
+        }
+
+        if (bell) {
+            System.out.print("\n");
+            System.out.print(completions.stream().map(prefix::concat).collect(Collectors.joining("  ")));
+            System.out.print("\n");
+            System.out.print("$ ");
+            System.out.print(prefix);
+            System.out.flush();
+        }
+
+        return Result.MORE;
+    }
+
+    private void writeToOutput(StringBuilder buffer, String prefix, boolean hasMore) {
+        buffer.append(prefix);
+        System.out.print(prefix);
+        if (!hasMore) {
+            buffer.append(" ");
+            System.out.print(" ");
+        }
+    }
+
+    private SequencedSet<String> getCompletions(String prefix) {
         List<String> builtInSuggestions = builtins.getWordsFrom(prefix);
+        String[] completions;
 
         if (builtInSuggestions.isEmpty()) {
             List<String> executableSuggestions = executablesFromPath.getWordsFrom(prefix);
 
-            return executableSuggestions.toArray(String[]::new);
+            completions = executableSuggestions.toArray(String[]::new);
         } else {
-            return builtInSuggestions.toArray(String[]::new);
+            completions = builtInSuggestions.toArray(String[]::new);
         }
+
+        return Arrays.stream(completions)
+                .map((candidate) -> candidate.substring(prefix.length())).
+                collect(Collectors.toCollection(() -> new TreeSet<>(SHORTEST_FIRST)));
+    }
+
+    private String getLongestSharedPrefix(SequencedSet<String> candidates) {
+        String first = candidates.getFirst();
+        if (first.isEmpty()) return "";
+
+        int i = 0;
+
+        for (; i < first.length(); i++) {
+            boolean oneIsNotMatching = false;
+
+            for (String candidate : candidates) {
+                if (!first.subSequence(0, i).equals(candidate.subSequence(0, i))) {
+                    oneIsNotMatching = true;
+                    break;
+                }
+            }
+
+            if (oneIsNotMatching) {
+                i--;
+                break;
+            }
+        }
+
+        return first.substring(0, i);
     }
 }

@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -96,6 +97,8 @@ public class Main {
     }
 
     private static String read() {
+        AutoComplete completer = new AutoComplete();
+
         try {
             System.out.print("$ ");
             StringBuilder buffer = new StringBuilder();
@@ -118,32 +121,19 @@ public class Main {
                     }
 
                     case '\t': {
-                        AutoComplete completer = new AutoComplete();
-                        String prefix = buffer.toString();
-                        String[] suggestions = completer.getCompletions(prefix);
-
-                        if (suggestions.length == 1) {
-                            clearLine(2 + buffer.length());
-                            System.out.print("$ ");
-                            System.out.print(suggestions[0] + " ");
-
-                            buffer.delete(0, buffer.length());
-                            buffer.append(suggestions[0]).append(" ");
-                            bellRang = false;
-                            break;
-                        } else {
-                            if (!bellRang) bell();
-                            if (bellRang) {
-                                System.out.print("\n");
-                                for (int i = 0; i < suggestions.length; i++) {
-                                    System.out.print(suggestions[i]);
-                                    if (i != suggestions.length - 1) System.out.print("  ");
-                                }
-                                System.out.print("\n");
-
-                                System.out.print("$ ");
-                                System.out.print(buffer);
-                            }
+                        AutoComplete.Result result = completer.autoComplete(buffer, bellRang);
+                        switch (result) {
+                            case NONE:
+                                bellRang = false;
+                                bell();
+                                break;
+                            case MORE:
+                                bellRang = true;
+                                bell();
+                                break;
+                            case SINGLE:
+                                bellRang = false;
+                                break;
                         }
                         break;
                     }
