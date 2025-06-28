@@ -2,7 +2,7 @@ import java.io.File;
 
 public class ShellSession {
     private static final File homeDirectory;
-    private static final File pathDirectory;
+    private static final String pathDirectory;
     private static File currentWorkingDirectory = new File(System.getProperty("user.dir"));
 
     static {
@@ -13,9 +13,9 @@ public class ShellSession {
         }
 
         if (System.getenv("PATH") == null) {
-            pathDirectory = currentWorkingDirectory;
+            pathDirectory = null;
         } else {
-            pathDirectory = new File(System.getenv("PATH"));
+            pathDirectory = System.getenv("PATH");
         }
     }
 
@@ -23,7 +23,7 @@ public class ShellSession {
         return currentWorkingDirectory;
     }
 
-    public static File getPath() {
+    public static String getPath() {
         return pathDirectory;
     }
 

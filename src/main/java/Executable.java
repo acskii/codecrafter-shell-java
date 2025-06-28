@@ -4,12 +4,14 @@ import java.util.List;
 
 public class Executable {
     public static String findExecutable(String exe) {
-        String path = ShellSession.getPath().getAbsolutePath();
+        String path = ShellSession.getPath();
+        if (path == null) return null;
+
         String[] dirs = path.split(File.pathSeparator);
 
         for (String dir : dirs) {
             File cmd = new File(dir, exe);
-            if (cmd.exists()) {
+            if (cmd.exists() && cmd.canExecute()) {
                 return cmd.getAbsolutePath();
             }
         }
@@ -18,7 +20,9 @@ public class Executable {
     }
 
     public static String[] getExecutablesFromPath() {
-        String path = ShellSession.getPath().getAbsolutePath();
+        String path = ShellSession.getPath();
+        if (path == null) return null;
+
         String[] dirs = path.split(File.pathSeparator);
         List<String> executables = new ArrayList<>();
 
