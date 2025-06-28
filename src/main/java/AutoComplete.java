@@ -1,13 +1,10 @@
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AutoComplete {
     private static class Trie {
         public static class TrieNode {
-            Map<Character, TrieNode> children = new HashMap<>();
+            Map<Character, TrieNode> children = new TreeMap<>();
             boolean endOfWord;
         }
 

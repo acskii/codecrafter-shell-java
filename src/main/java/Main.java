@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class Main {
 //    private static final Scanner reader = new Scanner(System.in);
     private static Process rawMode;
+    private static boolean bellRang;
 
     public static void main(String[] args) {
         CommandInvoker invoker = new CommandInvoker();
@@ -91,6 +92,7 @@ public class Main {
 
     private static void bell() {
         System.out.print((char) 0x7);
+        bellRang = true;
     }
 
     private static String read() {
@@ -127,16 +129,29 @@ public class Main {
 
                             buffer.delete(0, buffer.length());
                             buffer.append(suggestions[0]).append(" ");
+                            bellRang = false;
                             break;
                         } else {
-                            bell();
+                            if (!bellRang) bell();
+                            if (bellRang) {
+                                System.out.print("\n");
+                                for (int i = 0; i < suggestions.length; i++) {
+                                    System.out.print(suggestions[i]);
+                                    if (i != suggestions.length - 1) System.out.print("  ");
+                                }
+                                System.out.print("\n");
+
+                                System.out.print("$ ");
+                                System.out.print(buffer);
+                            }
                         }
+                        break;
                     }
 
                     case 0x7f: {
                         // Backspace
                         if (buffer.isEmpty()) continue;
-                        buffer.deleteCharAt(buffer.length());
+                        buffer.deleteCharAt(buffer.length() - 1);
                         System.out.print("\b \b");
                         break;
                     }
